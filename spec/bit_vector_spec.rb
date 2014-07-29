@@ -232,37 +232,21 @@ module BitVector
     describe "#include?" do
       let(:number) { 0b111 }
 
-      subject { bit_vector.include? indexes }
+      subject { bit_vector.include? index }
 
-      describe "with included indexes" do
-        let(:indexes) { [0, 1] }
-
-        it "returns true" do
-          assert subject
-        end
-      end
-
-      describe "with partially included indexes" do
-        let(:indexes) { [0, 1, 3] }
-
-        it "returns false" do
-          refute subject
-        end
-      end
-
-      describe "with excluded indexes" do
-        let(:indexes) { [3, 4] }
-
-        it "returns false" do
-          refute subject
-        end
-      end
-
-      describe "with no indexes" do
-        let(:indexes) { [] }
+      describe "with included index" do
+        let(:index) { 0 }
 
         it "returns true" do
           assert subject
+        end
+      end
+
+      describe "with excluded index" do
+        let(:index) { 3 }
+
+        it "returns false" do
+          refute subject
         end
       end
     end
@@ -270,37 +254,21 @@ module BitVector
     describe "#exclude?" do
       let(:number) { 0b111 }
 
-      subject { bit_vector.exclude? indexes }
+      subject { bit_vector.exclude? index }
 
-      describe "with excluded indexes" do
-        let(:indexes) { [3, 4] }
-
-        it "returns true" do
-          assert subject
-        end
-      end
-
-      describe "with partially excluded indexes" do
-        let(:indexes) { [3, 4, 0] }
-
-        it "returns false" do
-          refute subject
-        end
-      end
-
-      describe "with included indexes" do
-        let(:indexes) { [0, 1] }
-
-        it "returns false" do
-          refute subject
-        end
-      end
-
-      describe "with no indexes" do
-        let(:indexes) { [] }
+      describe "with excluded index" do
+        let(:index) { 3 }
 
         it "returns true" do
           assert subject
+        end
+      end
+
+      describe "with included index" do
+        let(:index) { 0 }
+
+        it "returns false" do
+          refute subject
         end
       end
     end
@@ -373,6 +341,26 @@ module BitVector
 
         it "raises" do
           lambda { subject }.must_raise(ArgumentError)
+        end
+      end
+    end
+
+    describe "#each" do
+      describe "with an empty vector" do
+        let(:number) { 0 }
+
+        it "does not call the block" do
+          bit_vector.each { throw :called }
+        end
+      end
+
+      describe "with a known vector" do
+        let(:number) { 0b1010 }
+
+        it "yields the set indexes" do
+          indexes = []
+          bit_vector.each { |index| indexes << index }
+          indexes.must_equal [1, 3]
         end
       end
     end

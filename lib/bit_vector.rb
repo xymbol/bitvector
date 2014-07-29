@@ -59,18 +59,19 @@ module BitVector
     end
     alias_method :-, :&
 
-    # Returns true if all the bits at indexes are set, false otherwise.
-    def include?(indexes)
-      indexes.all? { |index| self[index] == 1 }
-    end
-
-    # Returns true if all the bits at indexes are unset, false otherwise.
-    def exclude?(indexes)
-      indexes.all? { |index| self[index] == 0 }
-    end
-
     # This should be good for now.
     alias_method :hash, :number
+
+    # Yields successive set bit indexes.
+    def each
+      (0...size).each { |index| yield index if self[index] == 1 }
+    end
+    include Enumerable
+
+    # Returns true if all the bits at indexes are unset, false otherwise.
+    def exclude?(index)
+      !include?(index)
+    end
 
     # Loads vector from value.
     def self.load(value)
